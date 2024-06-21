@@ -8,5 +8,5 @@ const blogSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: "users" }
 }, { timestamps: true })
 
-export const Blog = mongoose.model("blogs", blogSchema);
+export default mongoose.model("blogs", blogSchema);
 
