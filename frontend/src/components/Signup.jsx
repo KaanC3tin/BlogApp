@@ -1,16 +1,62 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+
 
 const Signup = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+  const[email,setEmail]=useState("")
+
+  const handleSubmit = async (event) =>{ 
+    event.preventDefault();
+
+    const data = {
+      username: username,
+      password: password,
+      email:email
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setResponseMessage('Kayıt başarılı: ' + JSON.stringify(result));
+        setUsername("");
+        setPassword("");
+        setEmail("");
+      } else {
+        setResponseMessage('Kayıt başarısız: ' + JSON.stringify(result));
+      }
+    } catch (error) {
+      setResponseMessage('Bir hata oluştu: ' + error.message);
+    }
+  };
+
   return (
     <div>
-              <form className="form h-92 w-80">
+              <form className="form h-92 w-80"
+              onSubmit={handleSubmit}>
         <div className="title">
           Welcome,<br />
           <span>sign up to continue</span>
         </div>
-        <input className="input" name="username" placeholder="Username" type="text" />
-        <input className="input" name="email" placeholder="Email" type="email" />
-        <input className="input" name="password" placeholder="Password" type="password" />
+        <input value={username}
+        onChange={(e)=>setUsername(e.target.value)}
+         className="input" id="id" name="username" placeholder="Username" type="text" />
+        <input value={password} onChange={(e)=>setPassword(e.target.value)}
+        className="input" id='password' name="password" placeholder="Password" type="password"
+          />
+        <input  value={email} onChange={(e)=>setEmail(e.target.value)}
+        className="input" id='email' name="email" placeholder="Email" type="email" />
         <div className="login-with">
           <div className="button-log"><b>t</b></div>
           <div className="button-log">
@@ -47,6 +93,9 @@ const Signup = () => {
         </div>
         <button type='submit' className="button-confirm">Let`s go →</button>
       </form>
+      <div>
+        {responseMessage}
+      </div>
     </div>
   )
 }
