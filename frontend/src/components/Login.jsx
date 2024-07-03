@@ -47,8 +47,8 @@ const LoginPage = () => {
     <div>
       <form className="form h-92 w-80" onSubmit={handleSubmit}>
         <div className="title">
-          Hoş geldiniz,<br />
-          <span>Devam etmek için giriş yapın</span>
+          Welcome,<br />
+          <span>login up to continue</span>
         </div>
         <input
           className="input"
@@ -63,13 +63,13 @@ const LoginPage = () => {
           className="input"
           id="password"
           name="password"
-          placeholder="Şifre"
+          placeholder="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className="button-confirm">
-          Devam et →
+        Let`s go →
         </button>
       </form>
       <div>
