@@ -1,36 +1,48 @@
-import express from "express";
-import cors from "cors";
-const app = express();
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json());
-app.use(cors());
+process.on("uncaughtException", (err, result) => {
+    console.log(err);
+    process.exit(1);
+})
 
 import dotenv from "dotenv";
 dotenv.config({
-    path:`.env.${process.env.NODE_ENV}`
+    path: `.env.${process.env.NODE_ENV}`
 })
 
 
-import connectDb from "./db";
+import express from "express";
+const app = express();  
+
+
+import connectDb from "./config/mongoDb";
+import { connectRedis } from "./config/redis";
 
 connectDb();
+connectRedis();
 
-import session from "express-session";
 
-app.use(session({
-    secret: 'keyboard cat',
-  }))
 
-import authRoutes from "./routes/auth"
-import blogRoutes from "./routes/blog"
+import cors from "cors";
+import helmet from "helmet";
+import session from "./middlewares/session";
+import { appRateLimiter } from "./middlewares/rateLimiter"
 
-import swaggerUi  from "swagger-ui-express";
-import swaggerDocument from "./swagger.json"
 
-app.use("/api/auth",authRoutes);
-app.use("/api/blogs",blogRoutes);
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json({ limit: "10kb" }));
+app.use(cors());
+app.use(helmet());
+app.use(appRateLimiter);
+app.use(session);
 
-app.use("/swagger",swaggerUi.serve,swaggerUi.setup(swaggerDocument));
+import checkSession from "./middlewares/checkSession";
+app.use(checkSession);
+
+import routes from "./routes/mainRoutes"
+app.use(routes);
+
+import errorHandler from "./middlewares/errorHandler"
+app.use(errorHandler);
+
 
 app.listen(8080, () => {
     console.log("http://localhost:8080 üzerinden calisiyor.")

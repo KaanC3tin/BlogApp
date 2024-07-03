@@ -1,0 +1,15 @@
+{
+  message: 'The client is closed',
+  level: 'error',
+  timestamp: 'Jul-03-2024 17:44:09'
+}
+{
+  message: 'The client is closed',
+  level: 'error',
+  timestamp: 'Jul-03-2024 17:44:09'
+}
+{
+  message: 'The client is closed',
+  level: 'error',
+  timestamp: 'Jul-03-2024 17:44:09'
+}
