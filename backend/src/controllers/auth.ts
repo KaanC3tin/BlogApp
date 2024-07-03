@@ -1,56 +1,54 @@
 import express from "express";
-import User from "../models/user"
-import { sha256Hash, compareHash, createJwtToken } from "../helpers/authentication";
+import User from "../models/schemas/user"
+import { sha256Hash, compareHash } from "../helpers/authentication";
+import { getUserByEmail, createUser } from "../models/schemas/user"
+import ValidationError from "../errors/ValidationError"
 
-export const login = async (req: express.Request, res: express.Response) => {
+export const login = async (req: express.Request, res: express.Response,next:express.NextFunction) => {
     const { email, password } = req.body
     try {
         //validate
-        const user = await User.findOne({ email: email })
+        const user = await getUserByEmail(email);
         if (!user) {
-            return res.sendStatus(400);
+            throw new ValidationError("Email ya da sifre yanlis.");
         }
         const isMatch: boolean = compareHash(password, user.password);
         if (!isMatch) {
-            return res.sendStatus(403)
+            throw new ValidationError("Email ya da sifre yanlis.");
         }
-        // const jwtToken = createJwtToken(user._id.toString(), user.email, user.isAdmin);
         (req.session as any).isAdmin = user.isAdmin;
         (req.session as any).userId = user._id.toString();
         (req.session as any).email = user.email;
         return res.status(302).json("Giris basarili");
-        // return res.status(302).setHeader("auhtorization", jwtToken).json({ token: jwtToken })
     } catch (error) {
-        console.log(error)
-        return res.sendStatus(400)
+        next(error);
+
     }
 }
 
-export const register = async (req: express.Request, res: express.Response) => {
+export const register = async (req: express.Request, res: express.Response,next:express.NextFunction) => {
     const { username, email, password } = req.body;
     try {
         //validate 
         const existingUser = await User.findOne({ email: email })
         if (existingUser) {
-            return res.status(400).json("Bu email adresi zaten kayıtlı.")
+            throw new ValidationError("Bu email adresini alamazsınız.");
         }
         const hashedPassword = sha256Hash(password);
-        const user = new User({
-            username: username,
-            email: email,
+        await createUser({
+            username,
+            email,
             password: hashedPassword
         })
-        await user.save();
+
         return res.status(201).json("Hesap basariyla oluşturuldu.")
     } catch (error) {
-        console.log(error)
-        return res.status(400).json();
+        next(error);
     }
 }
 
-export const logout = async (req: express.Request, res: express.Response) => {
+export const logout = async (req: express.Request, res: express.Response,next:express.NextFunction) => {
     try {
-
 
         req.session.destroy((err) => {
             if (err) {
@@ -58,11 +56,10 @@ export const logout = async (req: express.Request, res: express.Response) => {
                 return res.sendStatus(500);
             }
         })
-        res.clearCookie("connect.sid", { path: "/" })
+        res.clearCookie("sessId", { path: "/" })
 
         return res.status(200).json("Oturum sonlandırıldı.")
     } catch (error) {
-        console.log(error)
-        return res.sendStatus(400)
+        next(error);
     }
 }
