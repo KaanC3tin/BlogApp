@@ -5,12 +5,12 @@ process.on("uncaughtException", (err, result) => {
 
 import dotenv from "dotenv";
 dotenv.config({
-    path: `.env.${process.env.NODE_ENV}`
+    path: `./.env.${process.env.NODE_ENV}`
 })
 
 
 import express from "express";
-const app = express();  
+const app = express();
 
 
 import connectDb from "./config/mongoDb";
@@ -18,8 +18,6 @@ import { connectRedis } from "./config/redis";
 
 connectDb();
 connectRedis();
-
-
 
 import cors from "cors";
 import helmet from "helmet";
@@ -43,7 +41,7 @@ app.use(routes);
 import errorHandler from "./middlewares/errorHandler"
 app.use(errorHandler);
 
-
-app.listen(8080, () => {
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
     console.log("http://localhost:8080 üzerinden calisiyor.")
 })

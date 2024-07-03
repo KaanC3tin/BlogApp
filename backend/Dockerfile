@@ -1,9 +1,16 @@
 FROM node:18.18.0-alpine
 
-COPY . /app_server
+WORKDIR /server
 
-WORKDIR /app_server
+COPY package*.json ./
 
-RUN npm install 
+RUN npm install
 
-CMD ["npm", "run", "start:dev"]
+RUN npm install -g typescript
+
+COPY . .
+
+RUN tsc
+
+CMD ["node", "dist/app.js"]
+
