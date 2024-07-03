@@ -11,19 +11,27 @@ services:
     networks:
       - bridge_network
     environment:
-      - DB_HOST=mongodb://mongodb/BlogApp
-      - HASH_SECRET=secret
-      - JWT_SECRET=secret_key
-    
-  mongodb:
+      - NODE_ENV=production
+
+  mongodbService:
     container_name: mongo_database
     image: mongo
     ports:
-      - "30000:27017"
+      - "27017:27017"
     networks:
       - bridge_network
     volumes:
       - BlogApp:/data/db
+
+  redisService:
+    container_name: redis_database
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - bridge_network
+    volumes:
+      - redis_data:/data
 
 networks:
   bridge_network:
@@ -31,4 +39,6 @@ networks:
 
 volumes:
   BlogApp:
+    driver: local
+  redis_data:
     driver: local

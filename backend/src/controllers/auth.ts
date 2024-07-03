@@ -22,7 +22,6 @@ export const login = async (req: express.Request, res: express.Response,next:exp
         return res.status(302).json("Giris basarili");
     } catch (error) {
         next(error);
-
     }
 }
 
