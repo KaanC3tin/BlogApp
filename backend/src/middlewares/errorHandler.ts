@@ -26,6 +26,7 @@ export default (error: Error, req: express.Request, res: express.Response, next:
         return res.status(413).json("Request size too large");
     }
     else {
+        console.log(error);
         return res.status(500).json("Internal Server Error");
     }
 }

@@ -44,14 +44,17 @@ export const getBlogDetail = async (req: express.Request, res: express.Response,
 }
 
 export const postCreateBlog = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const { title, image, description, categoryId } = req.body;
+    const { title, description, categoryId } = req.body;
     const userId = res.locals.userId;
     const cacheKey = Enum.CACHE_KEYS.BLOGS;
+    const imageName = req.file ? req.file.filename : null; // burada yalnızca dosya ismini alıyor ve kaydediyor veri tabanına
     try {
         //validation
+
+        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${imageName}`;
         await createBlog({
             title,
-            image,
+            imageUrl:imageUrl,
             description,
             categoryId,
             userId

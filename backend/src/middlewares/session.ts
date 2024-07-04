@@ -7,6 +7,6 @@ export default session({ // bu middlware cookie içerisinde sessId isimli cookiy
     store: redisStore,
     secret: process.env.SESSION_SECRET as string, // Güvenli bir secret key kullanın
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false } // true olursa, HTTPS üzerinden çalıştırmanız gerekir
 })
