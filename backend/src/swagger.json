@@ -1,132 +1,229 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Auth API",
-      "description": "API for user registration and login",
-      "version": "1.0.0"
-    },
-    "components": {
-      "securitySchemes": {
-        "jwtAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "jwt"
-        }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Auth API",
+    "description": "API for user registration and login",
+    "version": "1.0.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "jwtAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "jwt"
       }
-    },
-    "paths": {
-      "/api/auth/register": {
-        "post": {
-          "summary": "Yeni kullanıcı oluştur",
-          "requestBody": {
-            "required": true,
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Yeni kullanıcı oluştur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "password123"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "1251513133"
+                  }
+                },
+                "required": [
+                  "username",
+                  "email",
+                  "password",
+                  "phoneNumber"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Hesap basariyla oluşturuldu.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "user123"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "password": {
-                      "type": "string",
-                      "format": "password",
-                      "example": "password123"
-                    },
-                    "phoneNumber": {
-                      "type": "string",
-                      "example": "1251513133"
-                    }
-                  },
-                  "required": [
-                    "username",
-                    "email",
-                    "password",
-                    "phoneNumber"
-                  ]
+                  "type": "string"
                 }
               }
             }
           },
-          "responses": {
-            "201": {
-              "description": "Hesap basariyla oluşturuldu.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad request",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string"
-                  }
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
           }
         }
-      },
-      "/api/auth/login": {
-        "post": {
-          "summary": "giris yap",
-          "requestBody": {
-            "required": true,
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "giris yap",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user123@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "sifre2132"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Hesaba başariyla giriş yapildi.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "email": {
+                    "token": {
                       "type": "string",
-                      "example": "user123@gmail.com"
-                    },
-                    "password": {
-                      "type": "string",
-                      "format": "password",
-                      "example": "sifre2132"
-                    }
-                  },
-                  "required": [
-                    "username",
-                    "password"
-                  ]
-                }
-              }
-            }
-          },
-          "responses": {
-            "302": {
-              "description": "Hesaba başariyla giriş yapildi.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "token": {
-                        "type": "string",
-                        "example": "jwt_token_here"
-                      }
+                      "example": "jwt_token_here"
                     }
                   }
                 }
               }
-            },
-            "403": {
-              "description": ""
+            }
+          },
+          "403": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/blogs": {
+      "post": {
+        "summary": "Yeni blog oluştur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "description": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "password123"
+                  }
+                },
+                "required": [
+                  "title",
+                  "image",
+                  "description"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Blog basariyla oluşturuldu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs": {
+      "get": {
+        "summary": "Tüm blogları getirir.",
+        "requestBody": {
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Bloglar basariyla getirildi.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bloglar yok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       }
     }
   }
+}

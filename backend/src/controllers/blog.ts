@@ -1,19 +1,28 @@
 import express from "express";
-import Blog from "../models/schemas/blog"
-import { getBlogById, getBlogs, deleteBlogById, updateBlogById, createBlog } from "../models/schemas/blog"
+import { getBlogById, getBlogs, deleteBlogById, createBlog } from "../models/schemas/blog"
 // import { getBlogDetailByBlogId, deleteBlogDetailById, updateBlogDetailById } from "../models/schemas/blogDetail"
-import ValidationError from "../errors/ValidationError"
 import NotFoundError from "../errors/NotFoundError"
-import { redisClient } from "../config/redis"
+import { redisClient } from "../config/redis";
+
+import Enum from "../utils/enum";
 
 export const getAllBlogs = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const { filter, page } = req.query;
+    const cacheKey = Enum.CACHE_KEYS.BLOGS;
     try {
-        //validation
-        const blogs = await getBlogs();
-        if (!blogs) {
-            throw new NotFoundError("Blog bulunamadi");
+        let blogs: any = await redisClient.get(cacheKey);
+        if (blogs) {
+            console.log("cacheden cekti")
+            return res.status(200).json(JSON.parse(blogs));
         }
+        else if (!blogs) {
+            blogs = await getBlogs();
+            if (!blogs) {
+                throw new NotFoundError("Blog bulunamadi");
+            }
+            console.log("veritabanindan cekti")
+            await redisClient.setEx(cacheKey, 600, JSON.stringify(blogs)); // 600 second
+        }
+        // const blogs = await getBlogs();
         return res.status(200).json(blogs);
     } catch (error) {
         next(error);
@@ -37,6 +46,7 @@ export const getBlogDetail = async (req: express.Request, res: express.Response,
 export const postCreateBlog = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { title, image, description, categoryId } = req.body;
     const userId = res.locals.userId;
+    const cacheKey = Enum.CACHE_KEYS.BLOGS;
     try {
         //validation
         await createBlog({
@@ -46,6 +56,7 @@ export const postCreateBlog = async (req: express.Request, res: express.Response
             categoryId,
             userId
         })
+        await redisClient.del(cacheKey)
         return res.status(201).json("Blog olusturuldu");
     } catch (error) {
         next(error);
