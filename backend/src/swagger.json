@@ -183,9 +183,7 @@
             }
           }
         }
-      }
-    },
-    "/api/blogs": {
+      },
       "get": {
         "summary": "Tüm blogları getirir.",
         "requestBody": {
