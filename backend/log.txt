@@ -42,3 +42,38 @@
   level: 'error',
   timestamp: 'Jul-04-2024 14:27:19'
 }
+{
+  message: "ENOENT: no such file or directory, open 'C:\\tmp\\my-uploads\\file-1720099345413-244783140'",
+  level: 'error',
+  timestamp: 'Jul-04-2024 16:22:25'
+}
+{
+  message: "ENOENT: no such file or directory, open 'C:\\uploads\\file-1720099381514-302528277'",
+  level: 'error',
+  timestamp: 'Jul-04-2024 16:23:01'
+}
+{
+  message: "ENOENT: no such file or directory, open 'C:\\Users\\erenk\\OneDrive\\Masaüstü\\BlogApp\\backend\\UserserenkOneDriveMasaüstüBlogApp\backend'uploads\\file-1720099410171-948724319'",
+  level: 'error',
+  timestamp: 'Jul-04-2024 16:23:30'
+}
+{
+  message: "ENOENT: no such file or directory, open 'C:\\uploads\\file-1720102788993-14486833'",
+  level: 'error',
+  timestamp: 'Jul-04-2024 17:19:48'
+}
+{
+  message: "ENOENT: no such file or directory, open 'C:\\uploads\\file-1720102819813-498389550'",
+  level: 'error',
+  timestamp: 'Jul-04-2024 17:20:19'
+}
+{
+  message: 'Unexpected field',
+  level: 'error',
+  timestamp: 'Jul-04-2024 17:33:48'
+}
+{
+  message: 'Unexpected field',
+  level: 'error',
+  timestamp: 'Jul-04-2024 17:40:23'
+}

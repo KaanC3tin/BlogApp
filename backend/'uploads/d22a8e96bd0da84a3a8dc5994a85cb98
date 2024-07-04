@@ -1,0 +1,53 @@
+DataBase MySql Querys
+CREATE SCHEMA new_schema; //yeni bir şema oluşturur.
+
+CREATE TABLE `new_schema_test`.`new_table` (
+  `idnew_table` INT NOT NULL AUTO_INCREMENT,		// id adında kolonu oluşturur bu kolon oto artsın birincil anahtar olsun ve boş olmasın
+  PRIMARY KEY (`idnew_table`));
+
+DROP TABLE `new_schema_test`.`new_table_test`;	// Tablo silmek istersek eğer böyle sileriz...
+
+CREATE TABLE new_schema_test.new_table(
+id int not null auto_increment,
+username varchar(45) null,		// id adında bir kolon boş olamaz int bir değer ve oto artar, username adında bir kolon 45 karakterlik char boş olabilir, password de aynı şekilde
+password varchar(150) null,
+primary key(id)
+);
+
+INSERT INTO new_schema_test.new_table (column1, column2) values ("username" "password"); 
+
+
+ALTER TABLE `new_schema_test`.`new_table` 
+RENAME TO  `new_schema_test`.`table` ;		//tablo ismini değiştirmek için
+
+SELECT * FROM Products
+ORDER BY Price; 	// price göre siraliyor eğer sayısal değerse int şeklinde küçükten büyüğe eğer metinsel ise alfabetik sıralama yapar.
+
+SELECT *
+FROM Customers
+WHERE Country = 'Germany' OR Country = 'Spain';		klasik or sorgusu ya almanya olsun ya da ispanya ülkesi...
+
+
+SELECT * FROM Customers
+WHERE NOT Country = 'Spain'; 	// ülkesi ispanya olmayanları getir...
+
+
+select * from sema.table where id not in(1,2); // idsi 1 ve 2 olanlar harici getirir...
+
+
+update sema.table set username="erenen1", password="günc_sifre" where id="1"; // güncellemek istediğimiz kolonları yazıyoruz ve neredeki değeri güncellemek istiyorsak primary key ile çağırıyoruz.
+
+
+delete from sema.table where id="2"; // id'si 2 olan kullanıyı sildik...
+
+select count(*) from sema.table; // tableda kaç tane satır olduğunu yani kaç kullanici oldugunu gosteriyor...
+
+CREATE DATABASE testDB;
+
+ALTER TABLE mydb.test RENAME TO mydb.deneme (isim değiştirme)
+
+ALTER TABLE mydb.test ADD Email varchar(255);
+
+ALTER TABLE mydb.test DROP COLUMN email;
+
+ALTER TABLE mydb.test RENAME COLUMN email TO username;

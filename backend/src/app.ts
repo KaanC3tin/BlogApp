@@ -32,6 +32,11 @@ app.use(helmet());
 app.use(appRateLimiter);
 app.use(session);
 
+import path from "path";
+
+const UPLOAD_DIR = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(UPLOAD_DIR));
+
 import checkSession from "./middlewares/checkSession";
 app.use(checkSession);
 

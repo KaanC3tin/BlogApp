@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const blogSchema = new Schema({
     title: { type: String, requried: true },
-    image: { type: String },
+    imageUrl: { type: String },
     description: { type: String, required: true },
     categoryId: { type: Schema.Types.ObjectId, ref: "categories" },
     userId: { type: Schema.Types.ObjectId, ref: "users" }

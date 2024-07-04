@@ -6,10 +6,12 @@ import categoryRoutes from "./category"
 import authRoutes from "./auth"
 import commentRoutes from "./comment"
 import userRoutes from "./users"
+import uploadRoutes from "./upload"
 
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json"
 
+app.use("/api/uploads",uploadRoutes)
 app.use("/api/auth",authRoutes)
 app.use("/api/blogs",blogRoutes)
 app.use("/api/categories",categoryRoutes)
