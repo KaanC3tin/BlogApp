@@ -144,18 +144,24 @@
                   },
                   "image": {
                     "type": "string",
-                    "example": "user@example.com"
+                    "example": "kanka burada image'i file olarak göndermen gerekiyor <input type='file' şeklinde yap öyle al inputu dosya gönder buraya"
                   },
                   "description": {
                     "type": "string",
                     "format": "password",
                     "example": "password123"
+                  },
+                  "categoryName": {
+                    "type": "string",
+                    "format": "teknoloji",
+                    "example": "kozmetik"
                   }
                 },
                 "required": [
                   "title",
                   "image",
-                  "description"
+                  "description",
+                  "categoryName"
                 ]
               }
             }
@@ -186,9 +192,6 @@
       },
       "get": {
         "summary": "Tüm blogları getirir.",
-        "requestBody": {
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Bloglar basariyla getirildi.",
@@ -210,7 +213,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "Bloglar yok",
             "content": {
               "application/json": {
@@ -219,6 +222,145 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/blogs/{{blogId}}": {
+      "get": {
+        "summary": "Blog idye göre blogu getirir.",
+        "responses": {
+          "200": {
+            "description": "Blog basariyla getirildi.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Blog id geçersiz.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bloglar yok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "summary": "Session bilgisine göre kullanıcının profile bilgilerini döner.",
+        "responses": {
+          "200": {
+            "description": "Kullanıcının bilgilerini başarıyla döner."
+          },
+          "400": {
+            "description": "Kullanıcının session bilgisinde yanlıslık varsa dönemez"
+          },
+          "404": {
+            "description": "Kullanıcının session bilgisinde yanlıslık varsa dönemez"
+          }
+        }
+      },
+      "put": {
+        "summary": "Kullanıcının profile bilgilerini günceller cookieden gelen sessiona göre",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  }
+                },
+                "required": [
+                  "username",
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Başarıyla kullanıcının profile bilgileri güncellendi."
+          },
+          "400": {
+            "description": "Kullanıcının profile bilgileri güncellenemedi."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Sessiona göre kullanıcı hesabı silinir.",
+        "responses": {
+          "200": {
+            "description": "Kullanıcı hesabı silindi."
+          },
+          "404": {
+            "description": "session bilgisinde yanlıslık var kullanıcı bulunamadı."
+          }
+        }
+      }
+    },
+    "/api/categories": {
+      "get": {
+        "summary": "Bütün kategorileri getirir.",
+        "responses": {
+          "200":{
+            "description": "Başarıyla getirir."
+          },
+          "404":{
+            "description": "Kategoriler bulunamadı.0"
+          }
+        }
+      },
+      "post":{
+        "summary": "Kategori oluşturur.",
+        "requestBody":{
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "categoryName": {
+                    "type": "string",
+                    "example": "Teknoloji"
+                  }
+                },
+                "required": [
+                  "categoryName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201":{
+            "description": "Başarıyla kategori oluşturuldu."
           }
         }
       }
