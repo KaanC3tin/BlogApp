@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import ValidationError from "../errors/ValidationError";
+import CustomError from "../utils/classes/CustomError";
 import path from "path";
 import fs from "fs";
 
@@ -28,7 +28,7 @@ const fileFilter = (req: express.Request, file: any, cb: any) => {
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new ValidationError('Invalid file type. Only JPEG, PNG and GIF files are allowed.'), false);
+        cb(new CustomError(400,"Validation Error",'Invalid file type. Only JPEG, PNG files are allowed.'), false);
     }
 };
 

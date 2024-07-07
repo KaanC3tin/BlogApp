@@ -36,7 +36,7 @@ export default mongoose.model("Users", userSchema);
 import User from "./user";
 
 export const getUsers = () => User.find();
-export const getUserById = (userId: string) => User.findOne({ _id: userId });
+export const getUserById = (userId: string) => User.findOne({ _id: userId }).select("-password");
 export const getUserByEmail = (email: string) => User.findOne({ email: email });
 
 export const createUser = (values: object) => new User(values).save().then(user => user.toObject());

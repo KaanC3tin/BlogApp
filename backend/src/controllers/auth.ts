@@ -1,8 +1,9 @@
 import express from "express";
 import User from "../models/schemas/user"
-import { sha256Hash, compareHash } from "../helpers/authentication";
+import { sha256Hash, compareHash } from "../utils/functions/authFunctions";
 import { getUserByEmail, createUser } from "../models/schemas/user"
-import ValidationError from "../errors/ValidationError"
+import Response from "../utils/classes/Response";
+import CustomError from "../utils/classes/CustomError";
 
 export const login = async (req: express.Request, res: express.Response,next:express.NextFunction) => {
     const { email, password } = req.body
@@ -10,16 +11,16 @@ export const login = async (req: express.Request, res: express.Response,next:exp
         //validate
         const user = await getUserByEmail(email);
         if (!user) {
-            throw new ValidationError("Email ya da sifre yanlis.");
+            throw new CustomError(400,"Validation error","Email ya da şifre yanlış.");
         }
         const isMatch: boolean = compareHash(password, user.password);
         if (!isMatch) {
-            throw new ValidationError("Email ya da sifre yanlis.");
+            throw new CustomError(400,"Validation error","Email ya da şifre yanlış.");
         }
         (req.session as any).isAdmin = user.isAdmin;
         (req.session as any).userId = user._id.toString();
         (req.session as any).email = user.email;
-        return res.status(302).json("Giris basarili");
+        return res.status(302).json(Response.successResponse(null,"Login islemi basarili."));
     } catch (error) {
         next(error);
     }
@@ -31,7 +32,7 @@ export const register = async (req: express.Request, res: express.Response,next:
         //validate 
         const existingUser = await User.findOne({ email: email })
         if (existingUser) {
-            throw new ValidationError("Bu email adresini alamazsınız.");
+            throw new CustomError(400,"Validation error","Bu email adresini alamazsın.");
         }
         const hashedPassword = sha256Hash(password);
         await createUser({
@@ -40,7 +41,7 @@ export const register = async (req: express.Request, res: express.Response,next:
             password: hashedPassword
         })
 
-        return res.status(201).json("Hesap basariyla oluşturuldu.")
+        return res.status(201).json(Response.successResponse(null,"Hesap başarıyla oluşturuldu."))
     } catch (error) {
         next(error);
     }
@@ -57,7 +58,7 @@ export const logout = async (req: express.Request, res: express.Response,next:ex
         })
         res.clearCookie("sessId", { path: "/" })
 
-        return res.status(200).json("Oturum sonlandırıldı.")
+        return res.status(200).json(Response.successResponse(null,"Oturum sonlandırıldı."))
     } catch (error) {
         next(error);
     }

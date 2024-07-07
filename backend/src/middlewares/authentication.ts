@@ -1,40 +1,39 @@
 import express from "express";
-import User from "../models/schemas/user"
+import { getUserById } from "../models/schemas/user"
+import CustomError from "../utils/classes/CustomError";
 
 export const onlyUser = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        if (req.session && (req.session as any).userId && (req.session as any).email && (req.session as any).isAdmin) {
+        if (req.session && (req.session as any).userId && (req.session as any).email) {
             //session bulduysa varsa eğer 
-            const user = await User.findOne({ _id: (req.session as any).userId });
-            if(!user){
-                return res.status(403).json("Forbidden");
+            const user = await getUserById((req.session as any).userId);
+            if (!user) {
+                throw new CustomError(403,"Forbidden","Login olmalısın.")
             }
             return next();
         }
-        return res.status(403).json("Forbidden");
+        throw new CustomError(403,"Forbidden","Login olmalısın.")
     } catch (error) {
-        console.log(error);
-        return res.status(400).json();
+        next(error);
     }
 }
 
 
 export const onlyAdmin = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        if (req.session && (req.session as any).userId && (req.session as any).email && (req.session as any).isAdmin) {
+        if (req.session && (req.session as any).userId && (req.session as any).email) {
             //session bulduysa varsa eğer 
-            const user = await User.findOne({ _id: (req.session as any).userId });
-            if(!user){
-                return res.status(403).json("Forbidden");
+            const user = await getUserById((req.session as any).userId);
+            if (!user) {
+                throw new CustomError(403,"Forbidden","Login olmalısın.")
             }
             if (!user.isAdmin) {
-                return res.status(403).json("Forbidden");
+                throw new CustomError(403,"Forbidden","Login olmalısın.")
             }
             return next();
         }
-        return res.status(403).json("Forbidden");
+        throw new CustomError(403,"Forbidden","Login olmalısın.")
     } catch (error) {
-        console.log(error);
-        return res.status(400).json();
+        next(error)
     }
 }

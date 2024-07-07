@@ -1,11 +1,12 @@
 import express from "express";
 const router = express.Router();
-// import { getBlogs } from "../controllers/"
+import { getAllCategories, deleteCategory, updateCategory, postCreateCategory } from "../controllers/category"
+import { onlyAdmin } from "../middlewares/authentication";
 
-
-router.delete("/:categoryId",);
-router.get("/",);  // /api/categories
-router.post("/",);
+router.get("/", getAllCategories);
+router.post("/", postCreateCategory);
+router.delete("/:categoryId", deleteCategory);
+router.put("/", updateCategory);
 
 
 
